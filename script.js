@@ -1,15 +1,15 @@
-let men = ["David", "John", "Paul"];
-let women = ["Emily", "Hannah", "Sarah"];
-let menPreferences = {
-    "David": ["Sarah", "Emily", "Hannah"],
-    "John": ["Emily", "Sarah", "Hannah"],
-    "Paul": ["Emily", "Hannah", "Sarah"]
-};
-let womenPreferences = {
-    "Emily": ["John", "David", "Paul"],
-    "Hannah": ["Paul", "John", "David"],
-    "Sarah": ["David", "John", "Paul"]
-};
+// let men = ["David", "John", "Paul"];
+// let women = ["Emily", "Hannah", "Sarah"];
+// let menPreferences = {
+//     "David": ["Sarah", "Emily", "Hannah"],
+//     "John": ["Emily", "Sarah", "Hannah"],
+//     "Paul": ["Emily", "Hannah", "Sarah"]
+// };
+// let womenPreferences = {
+//     "Emily": ["John", "David", "Paul"],
+//     "Hannah": ["Paul", "John", "David"],
+//     "Sarah": ["David", "John", "Paul"]
+// };
 
 
 /*
@@ -103,33 +103,127 @@ function stableMarriageProblem(men, menPreferences, womenPreferences) {
     return engagedMen;
 }
 
+//function that generates a random input
+function generateRandomInput(n) {
+    const men = Array.from({ length: n }, (_, i) => `Man ${i+1}`); //creating an array of length n with man 1 to n
+    const women = Array.from({ length: n }, (_, i) => `Woman ${i+1}`); //creaing an array of length n with women 1 to n
+    // console.log(men);
+    // console.log(women);
+    // Generate random preference lists for men and women
+    const menPreferences = {};
+    const womenPreferences = {};
+  
+    for (let man of men) { //iterating over each man
+      let preferences = Array.from(women); //getting women array
+      shuffle(preferences); // shuffle the preferences array
+      menPreferences[man] = preferences; //assigning the shufled women array to this man's prefrence list
+    }
+  
+    for (let woman of women) {
+      let preferences = Array.from(men);
+      shuffle(preferences); // shuffle the preferences array
+      womenPreferences[woman] = preferences; //assigning the shufled man array to this women's prefrence list
+    }
+  
+    return {
+      men,
+      women,
+      menPreferences,
+      womenPreferences
+    };
+  }
+  
+  function shuffle(array) {
+    let currentIndex = array.length;
+    let temporaryValue, randomIndex;
+  
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+  
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+  
+      // And swap it with the current element.
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
+  
+    return array;
+  }
 
-function visualizeGraph(edgeList) {
+
+
+//function used to visualise the graph
+function visualizeGraph(nodes,edgeList) {
     const container = document.getElementById('graph-container');
     
     // Convert edge list to nodes and edges
-    const nodes = Array.from(new Set(edgeList.flat()));
-    const edges = edgeList.map(([source, target]) => ({ from: source, to: target }));
-    
+
     const graph = {
-      nodes: nodes.map(node => ({ id: node, label: node.toString() })),
-      edges: edges,
+      nodes: nodes,
+      edges: edgeList,
     };
     
+    
+
     const options = {
-      edges: {
-        smooth: {
-          enabled: true,
-          type: 'cubicBezier',
-        },
-      },
-    };
+        width: window.innerWidth + "px",
+        height: window.innerHeight + "px",
+        edges: {
+          arrows: {
+            to: { enabled: true, scaleFactor: 1 }
+          }
+        }
+      };
   
     const network = new vis.Network(container, graph, options);
   }
 
-  visualizeGraph([
-    ["abc", "def"],
-    ["abc", "dde"]
-  ]);
-console.log(stableMarriageProblem(men, menPreferences, womenPreferences));
+
+
+
+// console.log(stableMarriageProblem(men, menPreferences, womenPreferences));
+
+let randomGeneratedInput = generateRandomInput(5);
+console.log(stableMarriageProblem(randomGeneratedInput.men, randomGeneratedInput.menPreferences, randomGeneratedInput.womenPreferences));
+
+
+//function that generates adjacency list from the random data
+function generateGraphData(men,women,menPreferences,womenPreferences)
+{
+    let edgeList = [];
+    let nodes = []
+
+    for(let man of men)
+        nodes.push({id : man , label : man , color : "lightgreen"});
+    
+    for(let woman of women)
+        nodes.push({id : woman , label : woman , color : "pink"});
+
+    for(let [man,prefrencelist] of Object.entries(menPreferences)) //iterating over each man prefrence list
+    {
+        console.log(man,prefrencelist)
+
+        for(let thisWomen of prefrencelist) //iterating over the preferred womens of each man
+        edgeList.push({from : man, to : thisWomen , arrow : "to"}) //pushing them to adjacency list
+    }
+
+    for(let [woman,prefrencelist] of Object.entries(womenPreferences)) //iterating over each women's prefrence list
+    {
+        console.log(woman,prefrencelist)
+
+        for(let thisMan of prefrencelist) //iterating over the preferred womens of each man
+        edgeList.push({ from : woman, to : thisMan , arrow : "to" }) //pushing them to adjacency list
+    }
+
+
+
+    // console.log(adjacencyList)
+    return {edgeList,nodes};
+}
+
+
+let generatedGraphData = generateGraphData(randomGeneratedInput.men,randomGeneratedInput.women,randomGeneratedInput.menPreferences,randomGeneratedInput.womenPreferences)
+visualizeGraph(generatedGraphData.nodes,generatedGraphData.edgeList);

@@ -156,8 +156,8 @@ function generateRandomInput(n) {
 
 
 //function used to visualise the graph
-function visualizeGraph(nodes,edgeList) {
-    const container = document.getElementById('graph-container');
+function visualizeGraph(containerID , nodes,edgeList) {
+    const container = document.getElementById(containerID);
     
     // Convert edge list to nodes and edges
 
@@ -169,8 +169,8 @@ function visualizeGraph(nodes,edgeList) {
     
 
     const options = {
-        width: window.innerWidth + "px",
-        height: window.innerHeight + "px",
+        width: (window.width) + "px",
+        height: "600",
         edges: {
           arrows: {
             to: { enabled: true, scaleFactor: 1 }
@@ -179,15 +179,8 @@ function visualizeGraph(nodes,edgeList) {
       };
   
     const network = new vis.Network(container, graph, options);
+    network.fit();
   }
-
-
-
-
-// console.log(stableMarriageProblem(men, menPreferences, womenPreferences));
-
-let randomGeneratedInput = generateRandomInput(5);
-console.log(stableMarriageProblem(randomGeneratedInput.men, randomGeneratedInput.menPreferences, randomGeneratedInput.womenPreferences));
 
 
 //function that generates adjacency list from the random data
@@ -224,6 +217,49 @@ function generateGraphData(men,women,menPreferences,womenPreferences)
     return {edgeList,nodes};
 }
 
+let randomGeneratedInput = null;
 
-let generatedGraphData = generateGraphData(randomGeneratedInput.men,randomGeneratedInput.women,randomGeneratedInput.menPreferences,randomGeneratedInput.womenPreferences)
-visualizeGraph(generatedGraphData.nodes,generatedGraphData.edgeList);
+function makeRandomInput(){
+    let noOfMenAndWomen = document.getElementById("noOfMenAndWomen").value;
+    randomGeneratedInput = generateRandomInput(noOfMenAndWomen); //generating random input data for stable marrige problem
+    let generatedGraphData = generateGraphData(randomGeneratedInput.men,randomGeneratedInput.women,randomGeneratedInput.menPreferences,randomGeneratedInput.womenPreferences)
+    visualizeGraph('graph-container',generatedGraphData.nodes,generatedGraphData.edgeList);
+    
+}
+
+
+function generateAnswerGraphData(men,women,answer){
+  let edgeList = [];
+  let nodes = []
+
+    for(let man of men)
+        nodes.push({id : man , label : man , color : "lightgreen"});
+    
+    for(let woman of women)
+        nodes.push({id : woman , label : woman , color : "pink"});
+
+  for([man,women] of Object.entries(answer)){
+    edgeList.push({from : man, to : women , arrow : "to"}) //pushing them to adjacency list
+  }
+  return {edgeList,nodes};
+}
+
+function solveStableMarrigeProblem()
+{
+
+  
+  
+  if(randomGeneratedInput!=null)
+  {
+    let answer = stableMarriageProblem(randomGeneratedInput.men, randomGeneratedInput.menPreferences, randomGeneratedInput.womenPreferences);
+    let answerGraphData = generateAnswerGraphData(randomGeneratedInput.men,randomGeneratedInput.women,answer);
+    console.log(answerGraphData)
+    document.getElementById("output").hidden = false;
+    visualizeGraph("output",answerGraphData.nodes,answerGraphData.edgeList)
+  }
+  else
+    alert("null input");
+  
+}
+
+makeRandomInput(); //calling the function to generate random input on page loading

@@ -19,42 +19,60 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
-
-
-
-
 <!-- vis js -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css">
+
+<link rel="stylesheet" href="./styles.css">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stable Marriage Problem</title>
 </head>
 <body>
+    <div id="inputdataoverlay" hidden>
+        <button type="button" class="btn-close btn-close-white" aria-label="Close" id="closeBtn" onclick="closePallet('inputdataoverlay')"></button>
+        <div class="container">
+            <div class="row my-3"> 
+                <div class="col my-4"> 
+                  <table id="mensPrefrence" class="table table-hover">
+                     
+                  </table>
+                </div>
+            </div>
+            <div class="row my-3"> 
+                <div class="col my-4"> 
+                  <table id="womensPrefrence" class="table table-hover">
+                    
+                  </table>
+                </div>
+            </div>
+        </div>
+    </div>
     <br><br>
     <H1 align="center">STABLE MARRIAGE PROBLEM</H1>
     <br>
     <div class="conainer" align="center">
-        <div class="row">
+        <div class="row my-3">
             <div class="col">
                 <span>No of Men and Women To Generate Random Input for : </span>
                 <input type="number" value="3" id="noOfMenAndWomen">
                 <button class="btn btn-danger" onclick="makeRandomInput()"> Generate Random Input</button>
+                <button class="btn btn-warning" onclick="viewGeneratedInput()">View Generated Input</button>
             </div>
         </div>
-        <div class="row">
+        <div class="row my-3">
            <div class="col">
                <div id="graph-container" style="border: 2px solid black;"></div>
            </div>
         </div>
-        <div class="row">
+        <div class="row my-3">
             <div class="col">
                 <br><br>
                 <button class="btn btn-info btn-lg" onclick="solveStableMarrigeProblem()">SOLVE</button>
             </div>
         </div>
-        <div class="row">
+        <div class="row my-3">
             <div class="col">
                 <div id="output" style="border: 2px solid black;" hidden>
 

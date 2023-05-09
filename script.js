@@ -181,7 +181,7 @@ function visualizeGraph(containerID , nodes,edgeList,noOfNodes) {
           barnesHut: {
             gravitationalConstant: -2000,
             centralGravity: 0.3,
-            springLength: 35*noOfNodes,
+            springLength: 40*noOfNodes,
             springConstant: 0.04,
             damping: 0.09,
             avoidOverlap: 0
@@ -281,3 +281,43 @@ function solveStableMarrigeProblem()
 }
 
 makeRandomInput(); //calling the function to generate random input on page loading
+
+function closePallet(id)
+{
+  document.getElementById(id).hidden = true;
+}
+
+function viewGeneratedInput(){ //function displays the generated input data on HTML page
+
+  document.getElementById("inputdataoverlay").hidden = false;
+  
+  let menDataContainer = document.getElementById("mensPrefrence");
+  let mensHTML = '';
+  
+  for(let [man,prefrencelist] of Object.entries(randomGeneratedInput.menPreferences)) //iterating over each man prefrence list
+    {
+        mensHTML += `<tr class="bg-light text-center"><th> ${man} </th>`
+
+        for(let thisWomen of prefrencelist) //iterating over the preferred womens of each man
+          mensHTML += `<td> ${thisWomen} </td>` 
+        
+          mensHTML += `</tr>`
+    }
+  
+  menDataContainer.innerHTML = mensHTML;
+
+  let womenDataContainer = document.getElementById("womensPrefrence");
+  let womensHTML = '';
+  
+  for(let [woman,prefrencelist] of Object.entries(randomGeneratedInput.womenPreferences)) //iterating over each women's prefrence list
+    {
+      womensHTML += `<tr class="bg-light text-center"><th> ${woman} </th>`
+
+        for(let thisMan of prefrencelist) //iterating over the preferred womens of each man
+          womensHTML +=  `<td> ${thisMan} </td>` 
+
+          womensHTML += `</tr>`
+    }
+
+  womenDataContainer.innerHTML = womensHTML;
+}

@@ -156,7 +156,7 @@ function generateRandomInput(n) {
 
 
 //function used to visualise the graph
-function visualizeGraph(containerID , nodes,edgeList) {
+function visualizeGraph(containerID , nodes,edgeList,noOfNodes) {
     const container = document.getElementById(containerID);
     
     // Convert edge list to nodes and edges
@@ -181,7 +181,7 @@ function visualizeGraph(containerID , nodes,edgeList) {
           barnesHut: {
             gravitationalConstant: -2000,
             centralGravity: 0.3,
-            springLength: 395,
+            springLength: 35*noOfNodes,
             springConstant: 0.04,
             damping: 0.09,
             avoidOverlap: 0
@@ -243,7 +243,7 @@ function makeRandomInput(){
     let noOfMenAndWomen = document.getElementById("noOfMenAndWomen").value;
     randomGeneratedInput = generateRandomInput(noOfMenAndWomen); //generating random input data for stable marrige problem
     let generatedGraphData = generateGraphData(randomGeneratedInput.men,randomGeneratedInput.women,randomGeneratedInput.menPreferences,randomGeneratedInput.womenPreferences)
-    visualizeGraph('graph-container',generatedGraphData.nodes,generatedGraphData.edgeList);
+    visualizeGraph('graph-container',generatedGraphData.nodes,generatedGraphData.edgeList,noOfMenAndWomen);
     
 }
 
@@ -265,17 +265,15 @@ function generateAnswerGraphData(men,women,answer){
 }
 
 function solveStableMarrigeProblem()
-{
-
-  
-  
+{  
   if(randomGeneratedInput!=null)
   {
+    let noOfMenAndWomen = document.getElementById("noOfMenAndWomen").value;
     let answer = stableMarriageProblem(randomGeneratedInput.men, randomGeneratedInput.menPreferences, randomGeneratedInput.womenPreferences);
     let answerGraphData = generateAnswerGraphData(randomGeneratedInput.men,randomGeneratedInput.women,answer);
     console.log(answerGraphData)
     document.getElementById("output").hidden = false;
-    visualizeGraph("output",answerGraphData.nodes,answerGraphData.edgeList)
+    visualizeGraph("output",answerGraphData.nodes,answerGraphData.edgeList,noOfMenAndWomen)
   }
   else
     alert("null input");
